@@ -1,18 +1,183 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet"
+      integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
 <head>
     <meta charset="UTF-8">
     <title>Users</title>
 </head>
 <body>
-<div>
-    <th:block th:each="user : ${users}">
-        <h2><a th:href="@{/admin/users/{id}(id=${user.getEmail()})}" th:text="${user}">VALUE</a></h2>
-    </th:block>
-    <a href="/admin/new">Create new user</a>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <h3 th:object="${admin}" style="color: white"
+                        th:text="${admin.getEmail()} + ' with roles: ' + ${admin.getRoles().iterator().next()}"></h3>
+                </li>
+            </ul>
+            <a href="/logout">
+                <button type="button" class="btn btn-dark">Logout</button>
+            </a>
+        </div>
+    </div>
+</nav>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-2">
+            <ul class="nav flex-column nav-pills p-3">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="#">Admin</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">User</a>
+                </li>
+            </ul>
+        </div>
+        <div class="col-9 border" style="background-color: #f8f9fa;">
+            <h1>Admin panel</h1>
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="#">Users table</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/new">New User</a>
+                </li>
+            </ul>
+            <div class="m-3">
+                <table class="table text-center table-striped">
+                    <thead>
+                    <tr><h4>All Users</h4></tr>
+                    <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Lastname</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Role</th>
+                        <th scope="col">Edit</th>
+                        <th scope="col">Delete</th>
+                    </tr>
+                    </thead>
+                    <tbody th:each="user : ${users}">
+                    <tr>
+                        <td th:text="${user.getId()}">ID</td>
+                        <td th:text="${user.getName()}">name</td>
+                        <td th:text="${user.getLastname()}">lastname</td>
+                        <td th:text="${user.getEmail()}">email</td>
+                        <td th:text="${user.getRoles().iterator().next()}">role</td>
+                        <td>
+                            <button type="button" class="btn btn-info" th:href="'#editModal'+${user.getId()}" data-bs-toggle="modal" >Edit</button>
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-danger" th:href="'#deleteModal' + ${user.getId()}" data-bs-toggle="modal">Delete</button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div th:each="user : ${users}">
+                    <div class="modal fade" th:id="${'editModal' + user.getId()}" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="editModalLabel">Edit User</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form class="fw-bold text-center" th:method="PATCH" th:action="@{/admin/users}" th:object="${user}">
+                                        <div class="mb-3">
+                                            <label for="id" class="form-label">ID</label>
+                                            <input type="number" th:value="${user.getId()}" name="id" class="form-control" id="id" aria-describedby="emailHelp" readonly>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="name" class="form-label">First name</label>
+                                            <input type="text" th:value="${user.getName()}" name="name" class="form-control" id="name" aria-describedby="emailHelp">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="lastname" class="form-label">Last name</label>
+                                            <input type="text" th:value="${user.getLastname()}" name="lastname" class="form-control" id="lastname">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="email" class="form-label">Email</label>
+                                            <input type="email" th:value="${user.getEmail()}" name="email" class="form-control" id="email">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="password" class="form-label">Password</label>
+                                            <input type="password" th:value="${user.getPassword()}" name="password" class="form-control" id="password">
+                                        </div>
+                                        <p>Role</p>
+                                        <select multiple name="roles" class="form-select" aria-label="Default select example">
+                                            <option name="roles" value="ADMIN">ADMIN</option>
+                                            <option selected name="roles" value="USER">USER</option>
+                                        </select>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                            <button type="submit" class="btn btn-primary">Edit</button>
+                                        </div>
+                                    </form>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div th:each="user : ${users}">
+                    <div class="modal fade" th:id="${'deleteModal' + user.getId()}" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="deleteModalLabel">Delete User</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form class="fw-bold text-center" th:method="DELETE" th:action="@{/admin/users}" th:object="${user}">
+                                        <div class="mb-3">
+                                            <label for="id2" class="form-label">ID</label>
+                                            <input type="number" th:value="${user.getId()}" name="id" class="form-control" id="id2" aria-describedby="emailHelp" readonly>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="name" class="form-label">First name</label>
+                                            <input type="text" th:value="${user.getName()}" name="name" class="form-control" id="name" aria-describedby="emailHelp" disabled readonly>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="lastname" class="form-label">Last name</label>
+                                            <input type="text" th:value="${user.getLastname()}" name="lastname" class="form-control" id="lastname" disabled readonly>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="email" class="form-label">Email</label>
+                                            <input type="email" th:value="${user.getEmail()}" name="email" class="form-control" id="email" disabled readonly>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="password" class="form-label">Password</label>
+                                            <input type="password" th:value="${user.getPassword()}" name="password" class="form-control" id="password" disabled readonly>
+                                        </div>
+                                        <p>Role</p>
+                                        <select multiple name="roles" class="form-select" aria-label="Default select example" disabled readonly>
+                                            <option name="roles" value="ADMIN">ADMIN</option>
+                                            <option selected name="roles" value="USER">USER</option>
+                                        </select>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                            <button type="submit" class="btn btn-danger">Delete</button>
+                                        </div>
+                                    </form>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--    <th:block th:each="user : ${users}">-->
+    <!--        <h2><a th:href="@{/admin/users/{id}(id=${user.getEmail()})}" th:text="${user}">VALUE</a></h2>-->
+    <!--    </th:block>-->
+    <!--    <a href="/admin/new">Create new user</a>-->
 </div>
-<br>
-<br>
-<a href="/logout"><button th:text="LOGOUT"></button></a>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>
 </body>
 </html>

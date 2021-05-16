@@ -1,6 +1,7 @@
 package com.example.springmvcboot.web.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -18,12 +19,16 @@ public class AdminController {
 
     @GetMapping("/users")
     public String getUsers(ModelMap model) {
+        User admin = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        model.addAttribute("admin", admin);
         model.addAttribute("users", userService.getUsers());
         return "users";
     }
 
     @GetMapping("/new")
     public String addUser(ModelMap model) {
+        User admin = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        model.addAttribute("admin", admin);
         model.addAttribute("user", new User());
         return "new";
     }
@@ -37,31 +42,27 @@ public class AdminController {
         return "redirect:/admin/users";
     }
 
-    @GetMapping("users/{id}")
-    public String getUserById(@PathVariable("id") String id, ModelMap model) {
-        model.addAttribute("user", userService.getUserById(id));
-        return "show";
-    }
+//    @GetMapping("users/{id}")
+//    public String getUserById(@PathVariable("id") String id, ModelMap model) {
+//        model.addAttribute("user", userService.getUserById(id));
+//        return "show";
+//    }
 
-    @GetMapping("users/{id}/edit")
-    public String edit(ModelMap model, @PathVariable("id") String id) {
-        model.addAttribute("user", userService.getUserById(id));
-        return "edit";
-    }
+//    @GetMapping("users/{id}/edit")
+//    public String edit(ModelMap model, @PathVariable("id") String id) {
+//        model.addAttribute("user", userService.getUserById(id));
+//        return "edit";
+//    }
 
-    @PatchMapping("users/{id}")
-    public String update(@ModelAttribute("user") @Valid User user, BindingResult bindingResult,
-                         @PathVariable("id") String id) {
-        if (bindingResult.hasErrors()) {
-            return "edit";
-        }
-        userService.updateUser(id, user);
+    @PatchMapping("/users")
+    public String update(@ModelAttribute("user") @Valid User user) {
+        userService.updateUser(user);
         return "redirect:/admin/users";
     }
 
-    @DeleteMapping("users/{id}")
-    public String delete(@PathVariable("id") String id) {
-        userService.deleteUserById(id);
+    @DeleteMapping("/users")
+    public String delete(@ModelAttribute User user) {
+        userService.deleteUserById(user.getId());
         return "redirect:/admin/users";
     }
 }

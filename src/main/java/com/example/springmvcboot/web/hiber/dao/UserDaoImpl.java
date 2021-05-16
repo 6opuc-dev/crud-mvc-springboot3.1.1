@@ -4,6 +4,7 @@ import com.example.springmvcboot.web.model.User;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.util.List;
 
@@ -25,28 +26,24 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public User getUserById(String id) {
+    public User getUserById(Long id) {
         return entityManager.find(User.class, id);
     }
 
     @Override
-    public void deleteUserById(String id) {
+    public void deleteUserById(Long id) {
         entityManager.remove(getUserById(id));
     }
 
     @Override
-    public void updateUser(String id, User user) {
-        User userToBeUpdated = getUserById(id);
-        userToBeUpdated.setName(user.getName());
-        userToBeUpdated.setLastname(user.getLastname());
-        userToBeUpdated.setEmail(user.getEmail());
-        userToBeUpdated.setPassword(user.getPassword());
-        userToBeUpdated.setRoles(user.getRoles());
-        addUser(userToBeUpdated);
+    public void updateUser(User user) {
+        entityManager.merge(user);
     }
 
     @Override
     public User getUserByName(String s) {
-        return entityManager.find(User.class, s);
+        Query query = entityManager.createQuery("from User where email=:email");
+        query.setParameter("email", s);
+        return (User) query.getSingleResult();
     }
 }

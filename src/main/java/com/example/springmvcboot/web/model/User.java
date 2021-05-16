@@ -14,10 +14,10 @@ import java.util.Set;
 @Entity
 @Table(name = "users")
 public class User implements UserDetails {
-//    @Id
-//    @Column
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    private Long id;
+    @Id
+    @Column
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     @NotEmpty(message = "Name should not be empty")
     @Size(min = 2, max = 20, message = "Wrong name size")
     @Column
@@ -26,10 +26,10 @@ public class User implements UserDetails {
     @Size(min = 2, max = 20, message = "Wrong lastname size")
     @Column
     private String lastname;
-    @Column
+    @Column(unique = true)
     @NotEmpty(message = "Email should not be empty")
     @Email
-    @Id
+//    @Id
     private String email;
     @Column
     private String password;
@@ -48,6 +48,14 @@ public class User implements UserDetails {
         this.name = name;
         this.lastname = lastname;
         this.email = email;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Set<Role> getRoles() {

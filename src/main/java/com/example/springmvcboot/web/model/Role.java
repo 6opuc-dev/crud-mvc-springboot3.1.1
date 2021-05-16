@@ -13,7 +13,7 @@ public class Role  implements GrantedAuthority {
     private Long id;
 
     private String role;
-    @ManyToMany(mappedBy = "roles")
+    @ManyToMany(mappedBy = "roles", cascade = CascadeType.ALL)
     List<User> users;
 
     public Role() {
@@ -55,6 +55,6 @@ public class Role  implements GrantedAuthority {
 
     @Override
     public String toString() {
-        return role="'" + role + "'";
+        return role;
     }
 }

@@ -1,17 +1,71 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet"
+      integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
 <head>
   <meta charset="UTF-8">
-  <title>User</title>
+  <title>Users</title>
 </head>
 <body>
-<div>
-  <th:block>
-    <h2 th:text="${user}">>VALUE</a></h2>
-  </th:block>
-  <br>
-  <br>
-  <a href="/logout"><button th:text="LOGOUT"></button></a>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container-fluid">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <h3 th:object="${user}" style="color: white"
+              th:text="${user.getEmail()} + ' with roles: ' + ${user.getRoles().iterator().next()}"></h3>
+        </li>
+      </ul>
+      <a href="/logout">
+        <button type="button" class="btn btn-dark">Logout</button>
+      </a>
+    </div>
+  </div>
+</nav>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-2">
+      <ul class="nav flex-column nav-pills p-3">
+        <li class="nav-item">
+          <a class="nav-link active" href="#">User</a>
+        </li>
+      </ul>
+    </div>
+    <div class="col-9 border" style="background-color: #f8f9fa;">
+      <h1>User information-page</h1>
+      <ul class="nav nav-tabs">
+
+      </ul>
+      <div class="m-3">
+        <table class="table text-center table-striped">
+          <thead>
+          <tr><h4>About User</h4></tr>
+          <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Name</th>
+            <th scope="col">Lastname</th>
+            <th scope="col">Email</th>
+            <th scope="col">Role</th>
+          </tr>
+          </thead>
+          <tbody th:object="${user}">
+          <tr>
+            <td th:text="${user.getId()}">name</td>
+            <td th:text="${user.getName()}">name</td>
+            <td th:text="${user.getLastname()}">lastname</td>
+            <td th:text="${user.getEmail()}">email</td>
+            <td th:text="${user.getRoles().iterator().next()}">role</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>
 </body>
 </html>

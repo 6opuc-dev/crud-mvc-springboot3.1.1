@@ -6,6 +6,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import com.example.springmvcboot.web.hiber.service.UserService;
+import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
 public class UsersController {
@@ -40,7 +41,7 @@ public class UsersController {
 
     @GetMapping("users/{id}")
     public String getUserById(@PathVariable("id") String id, ModelMap model) {
-        model.addAttribute("user", userService.getUserById(id));
+        model.addAttribute("user", userService.getUserByName(id));
         return "user";
     }
 
