@@ -17,7 +17,7 @@
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
                     <h3 th:object="${admin}" style="color: white"
-                        th:text="${admin.getEmail()} + ' with roles: ' + ${admin.getRoles().iterator().next()}"></h3>
+                        th:text="${admin.getEmail()} + ' with roles: ' + ${admin.getStringRoles()}"></h3>
                 </li>
             </ul>
             <a href="/logout">
@@ -34,7 +34,7 @@
                     <a class="nav-link active" aria-current="page" href="#">Admin</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">User</a>
+                    <a class="nav-link" th:object="${admin}" th:href="@{/admin/users/{id}(id=${admin.getEmail()})}">User</a>
                 </li>
             </ul>
         </div>
@@ -68,7 +68,7 @@
                         <td th:text="${user.getName()}">name</td>
                         <td th:text="${user.getLastname()}">lastname</td>
                         <td th:text="${user.getEmail()}">email</td>
-                        <td th:text="${user.getRoles().iterator().next()}">role</td>
+                        <td th:text="${user.getStringRoles()}">role</td>
                         <td>
                             <button type="button" class="btn btn-info" th:href="'#editModal'+${user.getId()}" data-bs-toggle="modal" >Edit</button>
                         </td>
@@ -139,20 +139,20 @@
                                             <input type="number" th:value="${user.getId()}" name="id" class="form-control" id="id2" aria-describedby="emailHelp" readonly>
                                         </div>
                                         <div class="mb-3">
-                                            <label for="name" class="form-label">First name</label>
-                                            <input type="text" th:value="${user.getName()}" name="name" class="form-control" id="name" aria-describedby="emailHelp" disabled readonly>
+                                            <label for="name2" class="form-label">First name</label>
+                                            <input type="text" th:value="${user.getName()}" name="name" class="form-control" id="name2" aria-describedby="emailHelp" disabled readonly>
                                         </div>
                                         <div class="mb-3">
-                                            <label for="lastname" class="form-label">Last name</label>
-                                            <input type="text" th:value="${user.getLastname()}" name="lastname" class="form-control" id="lastname" disabled readonly>
+                                            <label for="lastname2" class="form-label">Last name</label>
+                                            <input type="text" th:value="${user.getLastname()}" name="lastname" class="form-control" id="lastname2" disabled readonly>
                                         </div>
                                         <div class="mb-3">
-                                            <label for="email" class="form-label">Email</label>
-                                            <input type="email" th:value="${user.getEmail()}" name="email" class="form-control" id="email" disabled readonly>
+                                            <label for="email2" class="form-label">Email</label>
+                                            <input type="email" th:value="${user.getEmail()}" name="email" class="form-control" id="email2" disabled readonly>
                                         </div>
                                         <div class="mb-3">
-                                            <label for="password" class="form-label">Password</label>
-                                            <input type="password" th:value="${user.getPassword()}" name="password" class="form-control" id="password" disabled readonly>
+                                            <label for="password2" class="form-label">Password</label>
+                                            <input type="password" th:value="${user.getPassword()}" name="password" class="form-control" id="password2" disabled readonly>
                                         </div>
                                         <p>Role</p>
                                         <select multiple name="roles" class="form-select" aria-label="Default select example" disabled readonly>

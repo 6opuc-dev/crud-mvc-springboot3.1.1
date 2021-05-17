@@ -57,6 +57,10 @@ public class User implements UserDetails {
     public void setId(Long id) {
         this.id = id;
     }
+    
+    public String getStringRoles() {
+        return roles.toString().replaceAll("[^A-Z,\\s]", "");
+    }
 
     public Set<Role> getRoles() {
         return roles;

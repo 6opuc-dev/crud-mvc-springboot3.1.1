@@ -42,11 +42,11 @@ public class AdminController {
         return "redirect:/admin/users";
     }
 
-//    @GetMapping("users/{id}")
-//    public String getUserById(@PathVariable("id") String id, ModelMap model) {
-//        model.addAttribute("user", userService.getUserById(id));
-//        return "show";
-//    }
+    @GetMapping("users/{id}")
+    public String getUserById(@PathVariable("id") String id, ModelMap model) {
+        model.addAttribute("user", userService.getUserByName(id));
+        return "admin-user";
+    }
 
 //    @GetMapping("users/{id}/edit")
 //    public String edit(ModelMap model, @PathVariable("id") String id) {
