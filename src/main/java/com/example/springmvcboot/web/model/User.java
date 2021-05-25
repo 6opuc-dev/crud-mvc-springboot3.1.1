@@ -29,7 +29,6 @@ public class User implements UserDetails {
     @Column(unique = true)
     @NotEmpty(message = "Email should not be empty")
     @Email
-//    @Id
     private String email;
     @Column
     private String password;
@@ -99,11 +98,6 @@ public class User implements UserDetails {
     public void setEmail(String email) {
         this.email = email;
     }
-
-//    public Long getId() {
-//        return id;
-//    }
-
 
     public void setPassword(String password) {
         this.password = password;

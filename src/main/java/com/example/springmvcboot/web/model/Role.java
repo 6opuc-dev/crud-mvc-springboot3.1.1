@@ -1,5 +1,6 @@
 package com.example.springmvcboot.web.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
@@ -13,8 +14,9 @@ public class Role  implements GrantedAuthority {
     private Long id;
 
     private String role;
-    @ManyToMany(mappedBy = "roles", cascade = CascadeType.ALL)
-    List<User> users;
+//    @ManyToMany(mappedBy = "roles", cascade = CascadeType.ALL)
+//    @JsonIgnore
+//    List<User> users;
 
     public Role() {
 
@@ -24,13 +26,13 @@ public class Role  implements GrantedAuthority {
         this.role = role;
     }
 
-    public List<User> getUsers() {
-        return users;
-    }
-
-    public void setUsers(List<User> users) {
-        this.users = users;
-    }
+//    public List<User> getUsers() {
+//        return users;
+//    }
+//
+//    public void setUsers(List<User> users) {
+//        this.users = users;
+//    }
 
     public Long getId() {
         return id;

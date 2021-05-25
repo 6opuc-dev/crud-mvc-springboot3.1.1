@@ -1,21 +1,30 @@
 package com.example.springmvcboot.web.controller;
 
+import com.example.springmvcboot.web.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import com.example.springmvcboot.web.hiber.service.UserService;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+@RestController
 public class UsersController {
     @Autowired
     private UserService userService;
 
-    @GetMapping("/login")
-    public String login() {
-        return "login";
+//    @GetMapping("/login")
+//    public String login() {
+//        return "login";
+//    }
+
+    @GetMapping("/user")
+    public User getuserByEmail() {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return userService.getUserByName(user.getEmail());
     }
 
 //    @GetMapping("/users")
@@ -39,11 +48,11 @@ public class UsersController {
 //        return "redirect:/users";
 //    }
 
-    @GetMapping("users/{id}")
-    public String getUserById(@PathVariable("id") String id, ModelMap model) {
-        model.addAttribute("user", userService.getUserByName(id));
-        return "user";
-    }
+//    @GetMapping("users/{id}")
+//    public String getUserById(@PathVariable("id") String id, ModelMap model) {
+//        model.addAttribute("user", userService.getUserByName(id));
+//        return "user";
+//    }
 
 //    @GetMapping("users/{id}/edit")
 //    public String edit(ModelMap model, @PathVariable("id") Long id) {

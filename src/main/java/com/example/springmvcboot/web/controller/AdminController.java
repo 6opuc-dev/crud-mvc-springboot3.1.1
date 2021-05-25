@@ -10,43 +10,78 @@ import com.example.springmvcboot.web.hiber.service.UserService;
 import com.example.springmvcboot.web.model.User;
 
 import javax.validation.Valid;
+import java.util.List;
 
-@Controller
+@RestController
 @RequestMapping("/admin")
 public class AdminController {
+
     @Autowired
     private UserService userService;
 
-    @GetMapping("/users")
-    public String getUsers(ModelMap model) {
-        User admin = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        model.addAttribute("admin", admin);
-        model.addAttribute("users", userService.getUsers());
-        return "users";
+    @GetMapping("users")
+    public List<User> getUsers() {
+        return userService.getUsers();
     }
 
-    @GetMapping("/new")
-    public String addUser(ModelMap model) {
-        User admin = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        model.addAttribute("admin", admin);
-        model.addAttribute("user", new User());
-        return "new";
-    }
-
-    @PostMapping("/users")
-    public String createUser(@ModelAttribute("user") @Valid User user, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            return "new";
-        }
-        userService.addUser(user);
-        return "redirect:/admin/users";
+    @GetMapping("current")
+    public User getCurrentUser() {
+        return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 
     @GetMapping("users/{id}")
-    public String getUserById(@PathVariable("id") String id, ModelMap model) {
-        model.addAttribute("user", userService.getUserByName(id));
-        return "admin-user";
+    public User getUser(@PathVariable Long id) {
+        return userService.getUserById(id);
     }
+
+    @PostMapping("users")
+    public User createUser(@RequestBody User user) {
+        if(user != null) {
+            userService.addUser(user);
+        }
+        return user;
+    }
+
+    @PutMapping("users")
+    public void editUser(@RequestBody User user) {
+        userService.updateUser(user);
+    }
+
+    @DeleteMapping("users/{id}")
+    public void deleteUser(@PathVariable Long id) {
+        userService.deleteUserById(id);
+    }
+
+//    @GetMapping("/users")
+//    public String getUsers(ModelMap model) {
+//        User admin = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//        model.addAttribute("admin", admin);
+//        model.addAttribute("users", userService.getUsers());
+//        return "users";
+//    }
+////
+//    @GetMapping("/new")
+//    public String addUser(ModelMap model) {
+//        User admin = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//        model.addAttribute("admin", admin);
+//        model.addAttribute("user", new User());
+//        return "new";
+//    }
+////
+//    @PostMapping("/users")
+//    public String createUser(@ModelAttribute("user") @Valid User user, BindingResult bindingResult) {
+//        if (bindingResult.hasErrors()) {
+//            return "new";
+//        }
+//        userService.addUser(user);
+//        return "redirect:/admin/users";
+//    }
+//
+//    @GetMapping("users/{id}")
+//    public String getUserById(@PathVariable("id") String id, ModelMap model) {
+//        model.addAttribute("user", userService.getUserByName(id));
+//        return "admin-user";
+//    }
 
 //    @GetMapping("users/{id}/edit")
 //    public String edit(ModelMap model, @PathVariable("id") String id) {
@@ -54,15 +89,15 @@ public class AdminController {
 //        return "edit";
 //    }
 
-    @PatchMapping("/users")
-    public String update(@ModelAttribute("user") @Valid User user) {
-        userService.updateUser(user);
-        return "redirect:/admin/users";
-    }
-
-    @DeleteMapping("/users")
-    public String delete(@ModelAttribute User user) {
-        userService.deleteUserById(user.getId());
-        return "redirect:/admin/users";
-    }
+//    @PatchMapping("/users")
+//    public String update(@ModelAttribute("user") @Valid User user) {
+//        userService.updateUser(user);
+//        return "redirect:/admin/users";
+//    }
+//
+//    @DeleteMapping("/users")
+//    public String delete(@ModelAttribute User user) {
+//        userService.deleteUserById(user.getId());
+//        return "redirect:/admin/users";
+//    }
 }

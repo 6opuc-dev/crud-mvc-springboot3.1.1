@@ -16,8 +16,7 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <h3 th:object="${admin}" style="color: white"
-                        th:text="${admin.getEmail()} + ' with roles: ' + ${admin.getStringRoles()}"></h3>
+                    <h3 id="upper-navbar"></h3>
                 </li>
             </ul>
             <a href="/logout">
@@ -62,13 +61,13 @@
                         <th scope="col">Delete</th>
                     </tr>
                     </thead>
-                    <tbody th:each="user : ${users}">
+                    <tbody id="table">
                     <tr>
-                        <td th:text="${user.getId()}">ID</td>
-                        <td th:text="${user.getName()}">name</td>
-                        <td th:text="${user.getLastname()}">lastname</td>
-                        <td th:text="${user.getEmail()}">email</td>
-                        <td th:text="${user.getStringRoles()}">role</td>
+<!--                        <td th:text="${user.getId()}">ID</td>-->
+<!--                        <td th:text="${user.getName()}">name</td>-->
+<!--                        <td th:text="${user.getLastname()}">lastname</td>-->
+<!--                        <td th:text="${user.getEmail()}">email</td>-->
+<!--                        <td th:text="${user.getStringRoles()}">role</td>-->
                         <td>
                             <button type="button" class="btn btn-info" th:href="'#editModal'+${user.getId()}" data-bs-toggle="modal" >Edit</button>
                         </td>
@@ -173,11 +172,15 @@
             </div>
         </div>
     </div>
-    <!--    <th:block th:each="user : ${users}">-->
-    <!--        <h2><a th:href="@{/admin/users/{id}(id=${user.getEmail()})}" th:text="${user}">VALUE</a></h2>-->
-    <!--    </th:block>-->
-    <!--    <a href="/admin/new">Create new user</a>-->
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>
+<script>
+    function getUsers() {
+        fetch("/admin/users").then(res=>res.json()
+            .then(data=>data.forEach(user=>document.getElementById("table").innerHTML = "<tr><td>"
+                + user.id + "</td></tr>")))
+    }
+    let users = getUsers()
+</script>
 </body>
 </html>

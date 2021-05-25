@@ -16,8 +16,7 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
-          <h3 th:object="${user}" style="color: white"
-              th:text="${user.getEmail()} + ' with roles: ' + ${user.getStringRoles()}"></h3>
+          <h3 style="color: white" id="user"></h3>
         </li>
       </ul>
       <a href="/logout">
@@ -52,20 +51,27 @@
             <th scope="col">Role</th>
           </tr>
           </thead>
-          <tbody th:object="${user}">
-          <tr>
-            <td th:text="${user.getId()}">name</td>
-            <td th:text="${user.getName()}">name</td>
-            <td th:text="${user.getLastname()}">lastname</td>
-            <td th:text="${user.getEmail()}">email</td>
-            <td th:text="${user.getStringRoles()}">role</td>
-          </tr>
+          <tbody id="tbody">
+
           </tbody>
         </table>
       </div>
     </div>
   </div>
 </div>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>
+<script>
+  let user
+  fetch("/user").then(res=>res.json().then(u=>user = u)).then(function () {
+    document.querySelector("#user").textContent = user.email + " with roles: " + user.stringRoles
+    document.querySelector("#tbody").innerHTML =
+            "<tr>" +
+            "<td>" + user.id + "</td>" +
+            "<td>" + user.name + "</td>" +
+            "<td>" + user.lastname + "</td>" +
+            "<td>" + user.email + "</td>" +
+            "<td>" + user.stringRoles + "</td>" +
+            "</tr>"
+  })
+</script>
 </body>
 </html>
